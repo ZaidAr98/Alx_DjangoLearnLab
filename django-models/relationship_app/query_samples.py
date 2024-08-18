@@ -17,6 +17,6 @@ for book in books_in_library:
     print(book.name)
 
 # Retrieve the librarian for a library
-library_name = 'Mohamed'
-librarian = Librarian.objects.get(library__name=library_name)
-print(f"Librarian of {library_name}: {librarian.name}")
+library_name = 'Khartoum'
+librarian = Librarian.objects.get(library=library_name)
+
