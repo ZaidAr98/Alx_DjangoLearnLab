@@ -7,6 +7,6 @@ urlpatterns = [
     path('library/<int:pk>/',FunctionView.as_view(), name='LibraryDetailView'), 
         path('login/', loginView.as_view(), name='login'),
     path('logout/', logoutView.as_view(), name='logout'),
-    path('register/', register.as_view(), name='register'),
+    path('register/', register, name='register'),
 
 ]
