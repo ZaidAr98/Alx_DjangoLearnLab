@@ -10,12 +10,8 @@ from .models import Library
 
 
 def FunctionView(request):
-    books = Book.objects.all()
-    response_content = "<h1>Books Available:</h1><ul>"
-    for book in books:
-        response_content += f"<li>{book.name} by {book.author.name}</li>"
-    response_content += "</ul>"
-    return HttpResponse(response_content)
+     books = Book.objects.all()
+    return render(request, 'list_books.html', {'books': books})
 
 
 
