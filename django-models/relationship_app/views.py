@@ -28,7 +28,7 @@ class LibraryDetailView(DetailView):
 
 
 
-class RegisterView(CreateView):
+class register(CreateView):
     model = User
     template_name = 'relationship_app/templates/relationship_app/register.html'
     form_class = UserCreationForm
