@@ -5,18 +5,15 @@ author_name = 'Zaid'
 books_by_author = Book.objects.filter(author=author)
 
 
-for book in books_by_author:
-    print(book.name)
+
 
 # List all books in a library
 library_name = 'Khartoum'
-library = Library.objects.get(name=library_name)
-books_in_library = library.books.all()  # using related_name 'books'
+library = Library.objects.filter(name=library_name)
 
-for book in books_in_library:
-    print(book.name)
+
 
 # Retrieve the librarian for a library
 library_name = 'Mohamed'
-librarian = Librarian.objects.get(library__name=library_name)
-print(f"Librarian of {library_name}: {librarian.name}")
+librarian = Librarian.objects.filter(library__name=library_name)
+
