@@ -34,7 +34,7 @@ class loginView(LoginView):
 class logoutView(LogoutView):
     template_name = 'relationship_app/temlates/relationship_app/logout.html'
 
-class register(CreateView):
+class RegisterView(CreateView):
     model = User
     template_name = 'relationship_app/temlates/relationship_app/register.html'
     form_class = UserCreationForm
