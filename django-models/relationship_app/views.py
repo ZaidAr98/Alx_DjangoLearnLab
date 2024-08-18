@@ -22,22 +22,28 @@ class LibraryDetailView(DetailView):
 
 
 
-# Registration view using Django's built-in form
-class RegisterView(CreateView):
-    form_class = UserCreationForm
-    template_name = 'relationship_app/temlates/relationship_app/register.html'
-    success_url = reverse_lazy('login')
 
-def login_view(request):
+def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')  # Redirect to a home page or any other page
+            return redirect('home')  # Redirect to a page of your choice after login
     else:
         form = AuthenticationForm()
-    return render(request, 'relationship_app/temlates/relationship_app/login.html', {'form': form})
+    return render(request, 'login.html', {'form': form})
 
-class CustomLogoutView(LogoutView):
-    template_name = 'relationship_app/temlates/relationship_app/logout.html'
+def user_logout(request):
+    logout(request)
+    return render(request, 'logout.html')
+
+def user_register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
