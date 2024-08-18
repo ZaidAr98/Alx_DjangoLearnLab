@@ -11,7 +11,7 @@ from .models import Library
 
 def FunctionView(request):
      books = Book.objects.all()
-    return render(request, 'list_books.html', {'books': books})
+    return render(request, 'relationship_app/templates/list_books.html', {'books': books})
 
 
 
