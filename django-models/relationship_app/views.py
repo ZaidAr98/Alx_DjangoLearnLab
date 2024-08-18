@@ -22,13 +22,13 @@ class LibraryDetailView(DetailView):
 
 
 
-class CustomLoginView(LoginView):
+class loginView(LoginView):
     template_name = 'login.html'
 
-class CustomLogoutView(LogoutView):
+class logoutView(LogoutView):
     template_name = 'logout.html'
 
-class RegisterView(CreateView):
+class register(CreateView):
     form_class = UserCreationForm
     template_name = 'register.html'
     success_url = reverse_lazy('login')
