@@ -162,3 +162,21 @@ CSP_SCRIPT_SRC = ("'self'", 'https://code.jquery.com')
 
 
 
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Use HTTP Strict Transport Security (HSTS) to force browsers to communicate with the site only over HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow preloading of the HSTS policy in supported browsers
+
+# Security-related Headers
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking by not allowing the site to be framed
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent browsers from guessing the content type
+SECURE_BROWSER_XSS_FILTER = True  # Enable the browser’s XSS filtering
+
+
+
+# Secure cookies settings
+SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
