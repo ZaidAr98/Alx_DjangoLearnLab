@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Document</title>
+    <title>Delete Book</title>
 </head>
 <body>
-    <h1>Are you sure you want to delete this document?</h1>
-    <p>Title: {{ document.title }}</p>
-    <p>Content: {{ document.content }}</p>
+    <h1>Are you sure you want to delete this book?</h1>
+    <p>Title: {{ book.title }}</p>
+    <p>Content: {{ book.content }}</p>
     <form method="post">
         {% csrf_token %}
         <button type="submit">Yes, delete</button>
-        <a href="{% url 'document_list' %}">Cancel</a>
+        <a href="{% url 'book_list' %}">Cancel</a>
     </form>
 </body>
 </html>
