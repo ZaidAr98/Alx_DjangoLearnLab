@@ -180,3 +180,4 @@ SECURE_BROWSER_XSS_FILTER = True  # Enable the browser’s XSS filtering
 # Secure cookies settings
 SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
 CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
