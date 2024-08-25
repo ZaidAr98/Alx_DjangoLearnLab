@@ -1,19 +1,19 @@
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 
-from LibraryProject.bookshelf.forms import BookForm
+from LibraryProject.bookshelf.forms import ExampleForm
 from .models import Book
 from django.http import HttpResponse
 
 @permission_required('your_app.can_create', raise_exception=True)
 def create_book(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('book_list')
     else:
-        form = BookForm()
+        form = ExampleForm()
     return render(request, 'bookshelf/create_book.html', {'form': form})
 
 @permission_required('your_app.can_edit', raise_exception=True)
