@@ -1,0 +1,21 @@
+<!-- librarian_view.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Librarian Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Welcome to the Librarian Dashboard</h1>
+    <p>Manage library operations and assist members.</p>
+
+    <nav>
+        <ul>
+            <li><a href="{% url 'admin_view' %}">Admin Dashboard</a></li>
+            <li><a href="{% url 'member_view' %}">Member Dashboard</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

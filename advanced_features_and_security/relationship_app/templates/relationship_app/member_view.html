@@ -1,0 +1,21 @@
+<!-- member_view.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Member Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Welcome to the Member Dashboard</h1>
+    <p>Explore the library and manage your book loans.</p>
+
+    <nav>
+        <ul>
+            <li><a href="{% url 'admin_view' %}">Admin Dashboard</a></li>
+            <li><a href="{% url 'librarian_view' %}">Librarian Dashboard</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
