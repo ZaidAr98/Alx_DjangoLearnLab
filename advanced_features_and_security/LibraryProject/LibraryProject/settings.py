@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -136,3 +137,28 @@ LOGIN_REDIRECT_URL = '/'
 
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+DEBUG = False
+
+
+ALLOWED_HOSTS = ['http://127.0.0.1:3000']
+
+
+SECURE_BROWSER_XSS_FILTER = True  # Enables the X-XSS-Protection header in HTTP responses.
+X_FRAME_OPTIONS = 'DENY'  # Prevents the site from being framed (clickjacking protection).
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents the browser from trying to guess the content type.
+
+# Secure cookies:
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookies are only sent over HTTPS.
+SESSION_COOKIE_SECURE = True  # Ensures session cookies are only sent over HTTPS.
+
+
+
+# Example CSP configuration:
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", 'https://stackpath.bootstrapcdn.com')
+CSP_SCRIPT_SRC = ("'self'", 'https://code.jquery.com')
+
+
+
+
