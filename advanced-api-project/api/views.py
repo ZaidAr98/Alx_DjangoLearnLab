@@ -9,15 +9,24 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework as filters
+
+class SnippetFilter(filters.FilterSet):
+    title = filters.CharFilter(lookup_expr="icontains")  # Case-insensitive contains filter
+
+    class Meta:
+        model = Book  # Assuming you meant 'Book', not 'Snippet'
+        fields = ["title", "publication_year", "author"]  # Corrected 'fields'
+
 
 class ListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['title', 'author', 'publication_year'] 
-    search_fields = ['title', 'author'] 
-    ordering_fields = ['title', 'publication_year']
+    filteset_class = SnippetFilter
+    filter_backends = [filters.DjangoFilterBackend, SearchFilter]
+    
+
 
 
 class DetailView(generics.RetrieveAPIView):
