@@ -24,7 +24,9 @@ class ListView(generics.ListAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     filteset_class = SnippetFilter
-    filter_backends = [filters.DjangoFilterBackend, SearchFilter]
+    filter_backends = [filters.DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ['title', 'author']  
+    ordering_fields = ['title', 'publication_year']  
     
 
 
