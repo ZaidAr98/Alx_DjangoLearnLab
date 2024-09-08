@@ -7,11 +7,13 @@ from .models import Book
 from .serializers import BookSerializer
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.filters import filters
 from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import rest_framework as filters
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters import rest_framework as Filters
 
 class SnippetFilter(filters.FilterSet):
-    title = filters.CharFilter(lookup_expr="icontains")  # Case-insensitive contains filter
+    title = Filters.CharFilter(lookup_expr="icontains")  # Case-insensitive contains filter
 
     class Meta:
         model = Book  # Assuming you meant 'Book', not 'Snippet'
@@ -23,7 +25,7 @@ class ListView(generics.ListAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     filteset_class = SnippetFilter
-    filter_backends = [filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [Filters.DjangoFilterBackend, SearchFilter, Filters.OrderingFilter]
     search_fields = ['title', 'author']  
     ordering_fields = ['title', 'publication_year']  
     
