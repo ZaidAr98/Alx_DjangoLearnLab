@@ -11,6 +11,31 @@
         <a href="{% url 'post-update' post.pk %}" class="btn btn-secondary">Edit</a>
         <a href="{% url 'post-delete' post.pk %}" class="btn btn-danger">Delete</a>
     {% endif %}
-    <a href="{% url 'post-list' %}" class="btn btn-primary">Back to Posts</a>
+    <hr>
+    <h3>Comments</h3>
+    {% for comment in comments %}
+        <div class="comment">
+            <p>{{ comment.content }}</p>
+            <p><small>By {{ comment.author }} on {{ comment.created_at }}</small></p>
+            {% if user == comment.author %}
+                <a href="{% url 'comment-update' comment.pk %}" class="btn btn-link">Edit</a>
+                <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-link text-danger">Delete</a>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+    {% if user.is_authenticated %}
+        <hr>
+        <h4>Add a comment:</h4>
+        <form method="POST">
+            {% csrf_token %}
+            {{ comment_form|crispy }}
+            <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to post a comment.</p>
+    {% endif %}
+    <a href="{% url 'post-list' %}" class="btn btn-primary mt-4">Back to Posts</a>
 </div>
 {% endblock %}

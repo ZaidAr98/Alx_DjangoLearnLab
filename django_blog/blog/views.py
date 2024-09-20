@@ -7,6 +7,10 @@ from django.contrib.auth import logout as auth_logout
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Post, Comment
+from .forms import CommentForm
 
 
 # Create your views here.
@@ -140,3 +144,68 @@ class DeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+
+from django.views.generic import DetailView
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+
+    # Override the get_context_data method
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        comments = Comment.objects.filter(post=self.object)
+        data['comments'] = comments
+        if self.request.user.is_authenticated:
+            data['comment_form'] = CommentForm()
+        return data
+
+    # Handle POST request for adding a new comment
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return redirect('login')
+        self.object = self.get_object()
+        form = CommentForm(self.request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = self.request.user
+            comment.post = self.object
+            comment.save()
+            return redirect('post-detail', pk=self.object.pk)
+        else:
+            return self.get(request, *args, **kwargs)
+
+
+from django.views.generic import UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+
+from django.views.generic import DeleteView
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
