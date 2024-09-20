@@ -210,7 +210,8 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         comment = self.get_object()
         return self.request.user == comment.author
 
-
+from taggit.models import Tag
+from django.db.models import Q
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
@@ -225,3 +226,19 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+    
+def search(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    return render(request, 'blog/search_results.html', {'query': query, 'results': results})
+
+def posts_by_tag(request, tag_slug):
+    tag = get_object_or_404(Tag, slug=tag_slug)
+    posts = Post.objects.filter(tags__slug=tag_slug)
+    return render(request, 'blog/posts_by_tag.html', {'tag_name': tag.name, 'posts': posts})

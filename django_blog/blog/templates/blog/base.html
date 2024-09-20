@@ -10,6 +10,10 @@
 <body>
     <header>
         <nav>
+            <form method="GET" action="{% url 'search' %}">
+                <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}">
+                <button type="submit">Search</button>
+            </form>
             <ul>
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'register' %}">Register</a></li>
