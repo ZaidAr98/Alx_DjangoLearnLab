@@ -4,6 +4,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Post
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 
 # Create your views here.
 
@@ -90,3 +94,49 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+
+class ListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html' 
+    context_object_name = 'posts'
+    ordering = ['-published_date']  
+ 
+
+class DetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'  
+
+
+class CreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['title', 'content']  # Fields to include in the form
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # Set the author to the current user
+        return super().form_valid(form)
+
+
+class UpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author  # Ensure the user is the author
+
+
+class DeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = '/'
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
