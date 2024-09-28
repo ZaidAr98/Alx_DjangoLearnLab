@@ -37,3 +37,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('id', 'username', 'email', 'bio', 'profile_picture', 'followers', 'following')
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    followers = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    following = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'username', 'email', 'bio', 'profile_picture', 'followers', 'following')
+        read_only_fields = ('followers', 'following')
