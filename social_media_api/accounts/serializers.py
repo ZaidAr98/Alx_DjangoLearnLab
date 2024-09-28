@@ -4,6 +4,7 @@ from rest_framework.authtoken.models import Token
 
 
 User = get_user_model()
+register =get_user_model().objects.create_user
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,7 +13,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = User.objects.create_user(
+        user = register(
             username=validated_data['username'],
             email=validated_data['email'],
             bio=validated_data.get('bio', ''),
