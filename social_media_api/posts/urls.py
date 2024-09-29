@@ -18,8 +18,16 @@ post_urls = [
         'delete': 'destroy'
     }), name='comment-detail'),
 ]
+
+post_like_urls = [
+    path('posts/<int:pk>/like/', PostViewSet.as_view({'post': 'like'}), name='post-like'),
+    path('posts/<int:pk>/unlike/', PostViewSet.as_view({'post': 'unlike'}), name='post-unlike'),
+]
+
 urlpatterns = [
     path('', include(router.urls)),
     path('posts/', include(post_urls)),
     path('feed/', user_feed, name='user-feed'),
+    path('', include(post_like_urls)),
+
 ]
