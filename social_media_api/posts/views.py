@@ -1,5 +1,5 @@
 # posts/views.py
-from rest_framework import viewsets, permissions,status
+from rest_framework import viewsets, permissions,status, generics
 from .models import Post, Comment,Like
 from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
@@ -7,6 +7,7 @@ from rest_framework import filters
 from django.shortcuts import get_object_or_404
 from notifications.models import Notification
 from rest_framework.decorators import action
+from rest_framework.response import Response
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
 
@@ -29,11 +30,13 @@ class PostViewSet(viewsets.ModelViewSet):
     def like(self, request, pk=None):
         post = self.get_object()
         user = request.user
-        if post.likes.filter(id=user.id).exists():
-            return Response({'detail': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
-        like = Like.objects.create(user=user, post=post)
+         # Use get_or_create to prevent duplicate likes
+        like, created = Like.objects.get_or_create(user=user, post=post)
 
-        # Create notification
+        if not created:
+            return Response({'detail': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create notification if the post author is not the user
         if post.author != user:
             Notification.objects.create(
                 recipient=post.author,
@@ -46,13 +49,15 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def unlike(self, request, pk=None):
-        post = self.get_object()
-        user = request.user
-        if not post.likes.filter(id=user.id).exists():
+         post = generics.get_object_or_404(Post, pk=pk)
+         user = request.user
+            # 
+         try:
+            like = Like.objects.get(user=user, post=post)
+            like.delete()
+            return Response({'detail': 'Post unliked.'}, status=status.HTTP_200_OK)
+         except Like.DoesNotExist:
             return Response({'detail': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
-        like = Like.objects.get(user=user, post=post)
-        like.delete()
-        return Response({'detail': 'Post unliked.'}, status=status.HTTP_200_OK)
 
 
     def perform_create(self, serializer):
