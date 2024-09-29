@@ -17,10 +17,31 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'author_username', 'title', 'content', 'created_at', 'updated_at', 'comments']
-        read_only_fields = ['author', 'created_at', 'updated_at', 'comments']
+        fields = ['id', 'author', 'author_username', 'title', 'content', 'created_at', 'updated_at', 'comments','likes_count', 'is_liked']
+        read_only_fields = ['author', 'created_at', 'updated_at', 'comments', 'likes_count', 'is_liked']
 
     def create(self, validated_data):
         request = self.context.get('request')
         validated_data['author'] = request.user
         return super().create(validated_data)
+
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+
+    def get_is_liked(self, obj):
+        user = self.context.get('request').user
+        return obj.likes.filter(id=user.id).exists() if user.is_authenticated else False
+    
+
+from .models import Post, Comment, Like
+
+class LikeSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'timestamp']
+
+
+
+
