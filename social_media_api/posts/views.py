@@ -31,8 +31,9 @@ class PostViewSet(viewsets.ModelViewSet):
         post = self.get_object()
     
          # Use get_or_create to prevent duplicate likes
-        like, created = Like.objects.get_or_create(user= request.user, post=post)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
 
+        
         if not created:
             return Response({'detail': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
