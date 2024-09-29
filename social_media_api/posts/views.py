@@ -29,18 +29,18 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def like(self, request, pk=None):
         post = self.get_object()
-        user = request.user
+    
          # Use get_or_create to prevent duplicate likes
-        like, created = Like.objects.get_or_create(user=user, post=post)
+        like, created = Like.objects.get_or_create(user= request.user, post=post)
 
         if not created:
             return Response({'detail': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create notification if the post author is not the user
-        if post.author != user:
+        if post.author != request.user:
             Notification.objects.create(
                 recipient=post.author,
-                actor=user,
+                actor=request.user,
                 verb='liked your post',
                 target=post
             )
